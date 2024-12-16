@@ -14,25 +14,27 @@
         }
 
         .snake-line path {
-            fill: none;
-            stroke: gray;
-            stroke-width: 4;
+            /* fill: rgb(85, 51, 24); */
+            stroke-dasharray: 10;
+            stroke: rgb(67, 41, 21);
+            stroke-width: 6;
         }
 
         .timeline-marker {
-            width: 12px;
-            height: 12px;
-            background-color: lightblue;
+            width: 20px;
+            height: 20px;
+            background-color: lightgreen;
             border-radius: 50%;
             position: absolute;
             /* transform: translate(-50%, -50%); */
             cursor: pointer;
+            transform: translateY(-10px) translateX(-5px);
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .timeline-marker.highlight {
             background-color: #3b82f6; /* Blue */
-            transform: scale(1.2);
+            transform: translateY(-10px) translateX(-5px) scale(1.2);
         }
         
         .timeline-item.highlight {
@@ -59,11 +61,11 @@
         }
 
         .timeline-label.left {
-            right: 40%; /* Adjust to left of the marker */
+            right: 72%; /* Adjust to left of the marker */
         }
 
         .timeline-label.right {
-            left: 40%; /* Adjust to right of the marker */
+            left: 72%; /* Adjust to right of the marker */
         }
 
     </style>
@@ -97,23 +99,6 @@
             const data = await response.json();
             renderTimeline(data.timeline);
             renderVisualTimeline(data.timeline);
-        }
-
-        function renderTimeline(events) {
-            const timeline = document.getElementById('timeline');
-            events.forEach((event, index) => {
-                const timelineItem = document.createElement('div');
-                timelineItem.className = 'mb-6 p-4 border-l-4 border-blue-500 bg-white shadow-md timeline-item';
-                timelineItem.dataset.index = index;
-                timelineItem.innerHTML = `
-                    <h3 class="text-lg font-bold">${event.date}</h3>
-                    <p>${event.title}</p>
-                    <button class="text-blue-500" onclick='showPopup(${JSON.stringify(event)})'>Learn More</button>
-                `;
-                timelineItem.addEventListener('mouseenter', () => highlightMarker(index));
-                timelineItem.addEventListener('mouseleave', () => removeHighlight(index));
-                timeline.appendChild(timelineItem);
-            });
         }
 
         function renderVisualTimeline(events) {
@@ -171,7 +156,7 @@
                 const label = document.createElement("div");
                 label.className = `timeline-label ${direction}`;
                 label.style.top = `${currentY}px`;
-                label.textContent = `${event.date}: ${event.title}`;
+                label.textContent = `${event.date}`;
                 timelineContainer.appendChild(label);
             
                 // Accomplishment linkage
