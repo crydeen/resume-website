@@ -20,8 +20,8 @@ def timeline_data(request):
                     "details": "My project in my high school computer science class sparked my love for computer science. Wrote a working Pac-Man game in Java."
                 },
                 {
-                    "date": "2022",
-                    "title": "Promotion to Team Lead",
+                    "date": "2014",
+                    "title": "College (University of Mississippi)",
                     "description": "Led a team of developers to deliver multiple successful projects.",
                     "details": "Mentored junior developers and improved overall team efficiency."
                 },
