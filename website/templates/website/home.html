@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .snake-line {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .snake-line path {
+            fill: none;
+            stroke: gray;
+            stroke-width: 4;
+        }
+
+        .timeline-marker {
+            width: 12px;
+            height: 12px;
+            background-color: lightblue;
+            border-radius: 50%;
+            position: absolute;
+            /* transform: translate(-50%, -50%); */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .timeline-marker.highlight {
+            background-color: #3b82f6; /* Blue */
+            transform: scale(1.2);
+        }
+        
+        .timeline-item.highlight {
+            background-color: #e0f2fe; /* Light Blue */
+            transition: background-color 0.3s ease;
+        }
+
+        .timeline-marker[data-position="left"] {
+            left: 10%;
+        }
+
+        .timeline-marker[data-position="right"] {
+            left: 90%;
+        }
+
+        .timeline-label {
+            position: absolute;
+            padding: 4px 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50%);
+        }
+
+        .timeline-label.left {
+            right: 40%; /* Adjust to left of the marker */
+        }
+
+        .timeline-label.right {
+            left: 40%; /* Adjust to right of the marker */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Visual Timeline -->
+        <div id="visual-timeline" class="relative">
+            <div id="snake-line" class="snake-line"></div>
+            <div id="timeline-markers" class="relative"></div>
+        </div>
+
+        <!-- List of Accomplishments -->
+        <div>
+            <h1 class="text-3xl font-bold mb-6">My Interactive Resume</h1>
+            <div id="timeline" class="relative">
+                <!-- Timeline will be dynamically rendered here -->
+            </div>
+            <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div class="bg-white p-6 rounded shadow-md">
+                    <h2 id="popup-title" class="text-xl font-bold mb-4"></h2>
+                    <p id="popup-description" class="text-gray-700"></p>
+                    <button onclick="closePopup()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function fetchTimelineData() {
+            const response = await fetch('/web/timeline-data/');
+            const data = await response.json();
+            renderTimeline(data.timeline);
+            renderVisualTimeline(data.timeline);
+        }
+
+        function renderTimeline(events) {
+            const timeline = document.getElementById('timeline');
+            events.forEach((event, index) => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'mb-6 p-4 border-l-4 border-blue-500 bg-white shadow-md timeline-item';
+                timelineItem.dataset.index = index;
+                timelineItem.innerHTML = `
+                    <h3 class="text-lg font-bold">${event.date}</h3>
+                    <p>${event.title}</p>
+                    <button class="text-blue-500" onclick='showPopup(${JSON.stringify(event)})'>Learn More</button>
+                `;
+                timelineItem.addEventListener('mouseenter', () => highlightMarker(index));
+                timelineItem.addEventListener('mouseleave', () => removeHighlight(index));
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        function renderVisualTimeline(events) {
+            const timelineContainer = document.getElementById('visual-timeline');
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.classList.add("snake-line");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", `${events.length * 150}px`);
+            timelineContainer.appendChild(svg);
+
+            const containerWidth = timelineContainer.offsetWidth;
+            const leftX = containerWidth * 0.15; // 15% from left
+            const rightX = containerWidth * 0.85; // 85% from left
+            const centerX = containerWidth * 0.5; // Center point
+
+            let lastX = centerX;
+            let lastY = 0;
+
+            events.forEach((event, index) => {
+                const direction = index % 2 === 0 ? "left" : "right";
+                const currentX = direction === "left" ? leftX : rightX;
+                const currentY = index * 150 + 75;
+            
+                // Create path segment
+                const path = document.createElementNS(svgNS, "path");
+                path.setAttribute(
+                    "d",
+                    `M${lastX} ${lastY} C${lastX} ${lastY + 50}, ${currentX} ${currentY - 50}, ${currentX} ${currentY}`
+                );
+                path.setAttribute("stroke", "gray");
+                path.setAttribute("stroke-width", "4");
+                path.setAttribute("fill", "none");
+                svg.appendChild(path);
+            
+                // Update last position
+                lastX = currentX;
+                lastY = currentY;
+            
+                // Create marker
+                const marker = document.createElement("div");
+                marker.className = `timeline-marker`;
+                marker.dataset.index = index;
+                marker.style.top = `${currentY}px`;
+                marker.style.left = `${currentX - 6}px`; // Adjust for marker size
+            
+                // Marker event listeners
+                marker.addEventListener("mouseenter", () => highlightMarker(index));
+                marker.addEventListener("mouseleave", () => removeHighlight(index));
+                marker.addEventListener("click", () => showPopup(events[index]));
+            
+                timelineContainer.appendChild(marker);
+            
+                // Create label
+                const label = document.createElement("div");
+                label.className = `timeline-label ${direction}`;
+                label.style.top = `${currentY}px`;
+                label.textContent = `${event.date}: ${event.title}`;
+                timelineContainer.appendChild(label);
+            
+                // Accomplishment linkage
+                const timelineItem = document.querySelector(`.timeline-item[data-index="${index}"]`);
+                if (timelineItem) {
+                    timelineItem.addEventListener("mouseenter", () => highlightMarker(index));
+                    timelineItem.addEventListener("mouseleave", () => removeHighlight(index));
+                }
+            });
+        }
+
+        function renderTimeline(events) {
+            const timeline = document.getElementById('timeline');
+            events.forEach((event, index) => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'mb-6 p-4 border-l-4 border-blue-500 bg-white shadow-md timeline-item';
+                timelineItem.dataset.index = index;
+                timelineItem.innerHTML = `
+                    <h3 class="text-lg font-bold">${event.date}</h3>
+                    <p>${event.title}</p>
+                    <button class="text-blue-500" onclick='showPopup(${JSON.stringify(event)})'>Learn More</button>
+                `;
+            
+                // Accomplishment hover event listeners
+                timelineItem.addEventListener("mouseenter", () => highlightMarker(index));
+                timelineItem.addEventListener("mouseleave", () => removeHighlight(index));
+            
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        function highlightMarker(index) {
+            // Highlight the marker
+            document.querySelectorAll(`.timeline-marker[data-index='${index}']`).forEach(el => el.classList.add('highlight'));
+            // Highlight the corresponding accomplishment
+            document.querySelectorAll(`.timeline-item[data-index='${index}']`).forEach(el => el.classList.add('highlight'));
+        }
+
+        function removeHighlight(index) {
+            // Remove highlight from the marker
+            document.querySelectorAll(`.timeline-marker[data-index='${index}']`).forEach(el => el.classList.remove('highlight'));
+            // Remove highlight from the corresponding accomplishment
+            document.querySelectorAll(`.timeline-item[data-index='${index}']`).forEach(el => el.classList.remove('highlight'));
+        }
+
+
+        function showPopup(event) {
+            document.getElementById('popup-title').textContent = event.title;
+            document.getElementById('popup-description').textContent = event.details;
+            document.getElementById('popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.add('hidden');
+        }
+
+        fetchTimelineData();
+    </script>
+</body>
+</html>
