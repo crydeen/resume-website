@@ -13,12 +13,7 @@
             pointer-events: none;
         }
 
-        .snake-line path {
-            /* fill: rgb(85, 51, 24); */
-            stroke-dasharray: 10;
-            stroke: lightgray;
-            stroke-width: 6;
-        }
+
 
         .timeline-marker {
             width: 20px;
@@ -77,6 +72,11 @@
         .center {
             text-align: center;
         }
+        .class {
+            stroke-dasharray: none;
+            stroke: yellow;
+            stroke-width: 6;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -119,6 +119,7 @@
             svg.setAttribute("height", `${events.length * 150}px`);
             timelineContainer.appendChild(svg);
 
+            // Main Striped Center Lane
             const containerWidth = timelineContainer.offsetWidth;
             const leftX = containerWidth * 0.15; // 15% from left
             const rightX = containerWidth * 0.85; // 85% from left
@@ -127,16 +128,41 @@
             let lastX = centerX;
             let lastY = 0;
 
+            // Left Side of Lane
+            const leftLaneLeftX = containerWidth * 0.1; // 15% from left
+            const leftLaneRightX = containerWidth * 0.8; // 85% from left
+            const leftLaneCenterX = containerWidth * 0.45; // Center point
+
+            let lastLeftLaneX = leftLaneCenterX;
+            let lastLeftLaneY = 0
+
+            // Right Side of Lane
+            const rightLaneLeftX = containerWidth * 0.2; // 15% from left
+            const rightLaneRightX = containerWidth * 0.9; // 85% from left
+            const rightLaneCenterX = containerWidth * 0.55; // Center point
+
+            let lastRightLaneX = rightLaneCenterX;
+            let lastRightLaneY = 0
+
             events.forEach((event, index) => {
                 const direction = index % 2 === 0 ? "left" : "right";
                 const currentX = direction === "left" ? leftX : rightX;
+                const currentLeftLaneX = direction === "left" ? leftLaneLeftX : leftLaneRightX;
+                const currentRightLaneX = direction === "left" ? rightLaneLeftX : rightLaneRightX;
+
                 var currentY = 0
+                var currentLeftLaneY = 0
+                var currentRightLaneY = 0
                 if (lastX == centerX) {
                     currentY = index * 150 + 75;
                 }
                 else {
-                    currentY = index * 150 + 75;
+                    currentY = index * 150 + 50;
                 }
+                currentLeftLaneY = currentY
+                currentRightLaneY = currentY
+                // currentLeftLaneY = direction === "left" ? currentY - 25 : currentY + 25
+                // currentRightLaneY = direction === "left" ? currentY + 25 : currentY - 25
                 // const currentY = index * 150 + 75;
             
                 // Create path segment
@@ -154,14 +180,79 @@
                     `M${lastX} ${lastY} C${lastX} ${lastY + 150}, ${currentX} ${currentY - 150}, ${currentX} ${currentY}`
                 );
                 }
-                path.setAttribute("stroke", "gray");
+                path.setAttribute("stroke", "lightgray");
                 path.setAttribute("stroke-width", "4");
                 path.setAttribute("fill", "none");
+                path.setAttribute("stroke-dasharray","10")
                 svg.appendChild(path);
-            
+
                 // Update last position
                 lastX = currentX;
                 lastY = currentY;
+
+                // Path segment for Left Lane
+                const pathLeft = document.createElementNS(svgNS, "path");
+                if (lastLeftLaneX == leftLaneCenterX) {
+                    pathLeft.setAttribute(
+                    "d",
+                    `M${lastLeftLaneX} ${lastLeftLaneY} C${lastLeftLaneX} ${lastLeftLaneY + 50}, ${currentLeftLaneX} ${currentLeftLaneY - 100}, ${currentLeftLaneX} ${currentLeftLaneY}`
+                );
+                }
+
+                else {
+                    if(direction == "left") {
+                        pathLeft.setAttribute(
+                    "d",
+                    `M${lastLeftLaneX} ${lastLeftLaneY} C${lastLeftLaneX} ${lastLeftLaneY + 125}, ${currentLeftLaneX} ${currentLeftLaneY - 175}, ${currentLeftLaneX} ${currentLeftLaneY}`
+                    );
+                    } else {
+                        pathLeft.setAttribute(
+                    "d",
+                    `M${lastLeftLaneX} ${lastLeftLaneY} C${lastLeftLaneX} ${lastLeftLaneY + 175}, ${currentLeftLaneX} ${currentLeftLaneY - 125}, ${currentLeftLaneX} ${currentLeftLaneY}`
+                    );
+                    }
+                    
+                }
+                pathLeft.setAttribute("stroke", "#ba8e23");
+                pathLeft.setAttribute("stroke-width", "4");
+                pathLeft.setAttribute("fill", "none");
+                svg.appendChild(pathLeft);
+
+                // Update last position
+                lastLeftLaneX = currentLeftLaneX;
+                lastLeftLaneY = currentLeftLaneY
+
+                // Path segment for Right Lane
+                const pathRight = document.createElementNS(svgNS, "path");
+                if (lastRightLaneX == rightLaneCenterX) {
+                    pathRight.setAttribute(
+                    "d",
+                    `M${lastRightLaneX} ${lastRightLaneY} C${lastRightLaneX} ${lastRightLaneY + 100}, ${currentRightLaneX} ${currentRightLaneY - 50}, ${currentRightLaneX} ${currentRightLaneY}`
+                );
+                }
+
+                else {
+                    if(direction=="left") {
+                        pathRight.setAttribute(
+                    "d",
+                    `M${lastRightLaneX} ${lastRightLaneY} C${lastRightLaneX} ${lastRightLaneY + 175}, ${currentRightLaneX} ${currentRightLaneY - 125}, ${currentRightLaneX} ${currentRightLaneY}`
+                    );
+                    } else {
+                        pathRight.setAttribute(
+                    "d",
+                    `M${lastRightLaneX} ${lastRightLaneY} C${lastRightLaneX} ${lastRightLaneY + 125}, ${currentRightLaneX} ${currentRightLaneY - 175}, ${currentRightLaneX} ${currentRightLaneY}`
+                    );
+                    }
+                }
+                pathRight.setAttribute("stroke", "#ba8e23");
+                pathRight.setAttribute("stroke-width", "4");
+                pathRight.setAttribute("fill", "none");
+                svg.appendChild(pathRight);
+
+                // Update last position
+                lastRightLaneX = currentRightLaneX;
+                lastRightLaneY = currentRightLaneY;
+                
             
                 // Create marker
                 const marker = document.createElement("div");
