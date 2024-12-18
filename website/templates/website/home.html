@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Resume</title>
+    <title>David Chase Rydeen Resume</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: "Roboto", serif;
+        }
+        .name {
+            padding-top: 25px;
+        }
+
         .snake-line {
             position: absolute;
             width: 100%;
@@ -13,12 +23,9 @@
             pointer-events: none;
         }
 
-
-
         .timeline-marker {
             width: 20px;
             height: 20px;
-            background-color: lightgreen;
             border-radius: 50%;
             position: absolute;
             /* transform: translate(-50%, -50%); */
@@ -27,14 +34,21 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .timeline-marker.highlight {
-            background-color: green; 
-            transform: translateY(-10px) translateX(-5px) scale(1.2);
+        .education {
+            background-color: rgb(186, 255, 186);
+            border-color: rgba(0, 128, 0, var(--tw-border-opacity));
         }
-        
-        .timeline-item.highlight {
-            background-color: #e0f2fe; 
-            transition: background-color 0.3s ease;
+
+        .education.highlight {
+            background-color: lightgreen; 
+        }
+
+        .work {
+            background-color: rgb(210, 244, 255);
+        }
+
+        .work.highlight {
+            background-color: lightblue; 
         }
 
         .timeline-marker[data-position="left"] {
@@ -55,6 +69,31 @@
             transform: translateY(-50%);
         }
 
+        #visual-timeline {
+            background-color: gray;
+            border-radius: 5px;
+            box-shadow: -5px 0px 0px 0px lightgray inset, 5px 0px 0px 0px lightgray inset;
+        }
+
+        @media (max-width: 768px) {
+        /* Adjust snake line height for mobile */
+            #snake-line {
+                height: 100%;
+            }
+            .timeline-label.left {
+            right: 65%; /* Adjust to left of the marker */
+            }
+        
+            .timeline-label.right {
+                left: 65%; /* Adjust to right of the marker */
+            }
+        }
+
+    @media (min-width: 768px) {
+        /* Full height snake line on larger screens */
+        #snake-line {
+            height: calc(100vh - 50px);
+        }
         .timeline-label.left {
             right: 73%; /* Adjust to left of the marker */
         }
@@ -62,39 +101,105 @@
         .timeline-label.right {
             left: 73%; /* Adjust to right of the marker */
         }
+    }
 
-        #visual-timeline {
-            background-color: gray;
-            border-radius: 5px;
-            box-shadow: -5px 0px 0px 0px lightgray inset, 5px 0px 0px 0px lightgray inset;
-        }
+    .timeline-item {
+        margin-top: 1.5rem;
+    }
 
-        .center {
-            text-align: center;
-        }
-        .class {
-            stroke-dasharray: none;
-            stroke: yellow;
-            stroke-width: 6;
-        }
+    html {
+        scroll-behavior: smooth;
+    }
+    .roboto-thin {
+      font-family: "Roboto", serif;
+      font-weight: 100;
+      font-style: normal;
+    }
+
+    .roboto-light {
+      font-family: "Roboto", serif;
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    .roboto-regular {
+      font-family: "Roboto", serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    .roboto-medium {
+      font-family: "Roboto", serif;
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    .roboto-bold {
+      font-family: "Roboto", serif;
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    .roboto-black {
+      font-family: "Roboto", serif;
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    .roboto-thin-italic {
+      font-family: "Roboto", serif;
+      font-weight: 100;
+      font-style: italic;
+    }
+
+    .roboto-light-italic {
+      font-family: "Roboto", serif;
+      font-weight: 300;
+      font-style: italic;
+    }
+
+    .roboto-regular-italic {
+      font-family: "Roboto", serif;
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .roboto-medium-italic {
+      font-family: "Roboto", serif;
+      font-weight: 500;
+      font-style: italic;
+    }
+
+    .roboto-bold-italic {
+      font-family: "Roboto", serif;
+      font-weight: 700;
+      font-style: italic;
+    }
+
+    .roboto-black-italic {
+      font-family: "Roboto", serif;
+      font-weight: 900;
+      font-style: italic;
+    }
+
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100">
+    <div class="name"><h1 class="text-3xl font-bold mb-6 text-center">David "Chase" Rydeen</h1></div>
     <div class="container mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Visual Timeline -->
-        <div id="visual-timeline" class="relative">
+        <!-- Visual Timeline Section -->
+        <div id="visual-timeline" class="relative md:sticky top-0">
             <div id="snake-line" class="snake-line"></div>
             <div id="timeline-markers" class="relative"></div>
         </div>
 
-        <!-- List of Accomplishments -->
-        <div>
-            <h1 class="text-3xl font-bold mb-6 center">David "Chase" Rydeen</h1>
+        <!-- List of Accomplishments Section -->
+        <div id="regular-timeline">
             <div id="timeline" class="relative">
-                <!-- Timeline will be dynamically rendered here -->
+                <!-- Dynamically rendered list of accomplishments -->
             </div>
             <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-white p-6 rounded shadow-md">
+                <div class="bg-white p-6 rounded shadow-md max-w-md">
                     <h2 id="popup-title" class="text-xl font-bold mb-4"></h2>
                     <p id="popup-description" class="text-gray-700"></p>
                     <button onclick="closePopup()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
@@ -256,7 +361,7 @@
             
                 // Create marker
                 const marker = document.createElement("div");
-                marker.className = `timeline-marker`;
+                marker.className = `timeline-marker ${event.category}`;
                 marker.dataset.index = index;
                 marker.style.top = `${currentY}px`;
                 marker.style.left = `${currentX - 6}px`; // Adjust for marker size
@@ -270,7 +375,7 @@
             
                 // Create label
                 const label = document.createElement("div");
-                label.className = `timeline-label ${direction}`;
+                label.className = `timeline-label ${direction} ${event.category}`;
                 label.style.top = `${currentY}px`;
                 label.textContent = `${event.date}`;
                 timelineContainer.appendChild(label);
@@ -309,7 +414,7 @@
             events.forEach((event, index) => {
                 // Create the timeline item container
                 const timelineItem = document.createElement('div');
-                timelineItem.className = 'mb-6 p-4 border-l-4 border-blue-500 bg-white shadow-md relative timeline-item';
+                timelineItem.className = `mb-6 p-4 border-l-4 border-blue-500 bg-white shadow-md relative timeline-item ${event.category}`;
                 timelineItem.innerHTML = `
                     <h2 class="text-lg font-bold" data-index="${index}">${event.date}</h2>
                     <h3 class="text-md font-bold">${event.title}</h3>
@@ -323,11 +428,20 @@
             
                 // Create floating info icon
                 const infoIcon = document.createElement('button');
-                infoIcon.className = `
+                if(event.category == "work") {
+                    infoIcon.className = `
                     absolute top-1/2 right-4 transform -translate-y-1/2 
                     bg-blue-500 text-white w-8 h-8 flex items-center justify-center 
                     rounded-full shadow-lg hover:bg-blue-600 focus:outline-none
                 `;
+                } else {
+                    infoIcon.className = `
+                    absolute top-1/2 right-4 transform -translate-y-1/2 
+                    bg-green-500 text-white w-8 h-8 flex items-center justify-center 
+                    rounded-full shadow-lg hover:bg-green-600 focus:outline-none
+                `;
+                }
+                
                 infoIcon.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m0-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
