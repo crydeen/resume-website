@@ -11,6 +11,7 @@
     <style>
         body {
             font-family: "Roboto", serif;
+            /* background-image: linear-gradient(rgba(243, 244, 246, var(--tw-bg-opacity)), rgba(243, 244, 255, var(--tw-bg-opacity))); */
         }
         .name {
             padding-top: 25px;
@@ -43,12 +44,45 @@
             background-color: lightgreen; 
         }
 
+        .timeline-marker.education.highlight {
+            background-color: green; 
+        }
+
         .work {
             background-color: rgb(210, 244, 255);
         }
 
         .work.highlight {
             background-color: lightblue; 
+        }
+
+        .timeline-marker.work.highlight {
+            background-color: rgb(59, 130, 246);
+        }
+
+        #header {
+            text-align: center;
+        }
+
+        .header-item {
+            display: inline-block;
+            margin: auto;
+            padding: 5px;
+            
+        }
+
+        .header-item.education {
+            border-style: dotted;
+            border-width: 2px;
+            border-radius: 5px;
+            border-color: green;
+        }
+
+        .header-item.work {
+            border-style: dotted;
+            border-width: 2px;
+            border-radius: 5px;
+            border-color: rgb(59, 130, 246);
         }
 
         .timeline-marker[data-position="left"] {
@@ -73,6 +107,7 @@
             background-color: gray;
             border-radius: 5px;
             box-shadow: -5px 0px 0px 0px lightgray inset, 5px 0px 0px 0px lightgray inset;
+            height: 1580px;
         }
 
         @media (max-width: 768px) {
@@ -80,8 +115,12 @@
             #snake-line {
                 height: 100%;
             }
+            #visual-timeline {
+                min-height: 1580px;
+                height: auto;
+            }
             .timeline-label.left {
-            right: 65%; /* Adjust to left of the marker */
+                right: 65%; /* Adjust to left of the marker */
             }
         
             .timeline-label.right {
@@ -105,6 +144,8 @@
 
     .timeline-item {
         margin-top: 1.5rem;
+        position: relative; /* Needed for positioning the button inside */
+        padding-right: 3.5rem; /* Add space to the right for the button */
     }
 
     html {
@@ -188,13 +229,17 @@
     <div class="name"><h1 class="text-3xl font-bold mb-6 text-center">David "Chase" Rydeen</h1></div>
     <div class="container mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Visual Timeline Section -->
-        <div id="visual-timeline" class="relative md:sticky top-0">
+        <div id="visual-timeline" class="relative order-1 md:order-none md:sticky top-0">
             <div id="snake-line" class="snake-line"></div>
             <div id="timeline-markers" class="relative"></div>
         </div>
 
         <!-- List of Accomplishments Section -->
-        <div id="regular-timeline">
+        <div id="regular-timeline" class="order-2 md:order-none">
+            <div id="header">
+                <div class="education header-item"><h2 class="text-xl">Education</h2></div>
+                <div class="work header-item"><h2 class="text-xl">Work</h2></div>
+            </div>
             <div id="timeline" class="relative">
                 <!-- Dynamically rendered list of accomplishments -->
             </div>
