@@ -1,0 +1,213 @@
+body {
+    font-family: "Roboto", serif;
+    /* background-image: linear-gradient(rgba(243, 244, 246, var(--tw-bg-opacity)), rgba(243, 244, 255, var(--tw-bg-opacity))); */
+}
+.name {
+    padding-top: 25px;
+}
+
+.snake-line {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+}
+
+.timeline-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    /* transform: translate(-50%, -50%); */
+    cursor: pointer;
+    transform: translateY(-10px) translateX(-4px);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.education {
+    background-color: rgb(186, 255, 186);
+    border-color: rgba(0, 128, 0, var(--tw-border-opacity));
+}
+
+.education.highlight {
+    background-color: lightgreen; 
+}
+
+.timeline-marker.education.highlight {
+    background-color: green; 
+}
+
+.work {
+    background-color: rgb(210, 244, 255);
+}
+
+.work.highlight {
+    background-color: lightblue; 
+}
+
+.timeline-marker.work.highlight {
+    background-color: rgb(59, 130, 246);
+}
+
+#header {
+    text-align: center;
+}
+
+.header-item {
+    display: inline-block;
+    margin: auto;
+    padding: 5px;
+    
+}
+
+.header-item.education {
+    border-style: dotted;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: green;
+}
+
+.header-item.work {
+    border-style: dotted;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: rgb(59, 130, 246);
+}
+
+.timeline-marker[data-position="left"] {
+    left: 10%;
+}
+
+.timeline-marker[data-position="right"] {
+    left: 90%;
+}
+
+.timeline-label {
+    position: absolute;
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-50%);
+}
+
+#visual-timeline {
+    background-color: gray;
+    border-radius: 5px;
+    box-shadow: -5px 0px 0px 0px lightgray inset, 5px 0px 0px 0px lightgray inset;
+    height: 1580px;
+}
+
+@media (max-width: 768px) {
+/* Adjust snake line height for mobile */
+    #snake-line {
+        height: 100%;
+    }
+    #visual-timeline {
+        min-height: 1580px;
+        height: auto;
+    }
+    .timeline-label.left {
+        right: 65%; /* Adjust to left of the marker */
+    }
+
+    .timeline-label.right {
+        left: 65%; /* Adjust to right of the marker */
+    }
+}
+
+@media (min-width: 768px) {
+    /* Full height snake line on larger screens */
+    #snake-line {
+        height: calc(100vh - 50px);
+    }
+    .timeline-label.left {
+        right: 73%; /* Adjust to left of the marker */
+    }
+
+    .timeline-label.right {
+        left: 73%; /* Adjust to right of the marker */
+    }
+}
+
+.timeline-item {
+    margin-top: 1.5rem;
+    position: relative; /* Needed for positioning the button inside */
+    padding-right: 3.5rem; /* Add space to the right for the button */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+.roboto-thin {
+    font-family: "Roboto", serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.roboto-light {
+    font-family: "Roboto", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.roboto-regular {
+    font-family: "Roboto", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.roboto-medium {
+    font-family: "Roboto", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.roboto-bold {
+    font-family: "Roboto", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.roboto-black {
+    font-family: "Roboto", serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.roboto-thin-italic {
+    font-family: "Roboto", serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.roboto-light-italic {
+    font-family: "Roboto", serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.roboto-regular-italic {
+    font-family: "Roboto", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.roboto-medium-italic {
+    font-family: "Roboto", serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.roboto-bold-italic {
+    font-family: "Roboto", serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.roboto-black-italic {
+    font-family: "Roboto", serif;
+    font-weight: 900;
+    font-style: italic;
+}
